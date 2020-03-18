@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require_once '../inc/connection.php';
 
 if(isset($_POST['username'], $_POST['password'])){  // check if username and password are written
@@ -20,15 +22,43 @@ if(isset($_POST['username'], $_POST['password'])){  // check if username and pas
 
   }else {
 
-    $stmt = $pdo->prepare('SELECT FORM users WHERE username = :username AND password = :password'); //check if username & password are in Database
-    $stmt->execute(['username' => $username, 'password' => $password]);
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE username = :username OR email = :email'); //check if username & password are in Database
+    $stmt->execute([':username' => $username, ':email' => $username]);
 
     if($stmt->rowCount()){
 
-      echo 'hello ' . $username;
-      
+      $stmt = $pdo->prepare('SELECT * FROM users WHERE (username = :username OR email = :email) AND activated = 1'); //check if username & password are in Database
+      $stmt->execute([':username' => $username, ':email' => $username]);
+
+      if($stmt->rowCount()){
+
+        foreach ($stmt->fetchAll() as $value) {
+
+          print_r($value);
+          if(password_verify($password, $value['password'])){
+
+            echo 'wellcome user';
+
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $value['username'];
+            $_SESSION['email']    = $value['email'];
+            $_SESSION['id']       = $value['id'];
+
+          }else {
+
+            echo 'email/username or password is incorrect';
+          }
+
+        }
+
+      }else {
+
+          echo "User is not activated";
+      }
+
     }else {
-      echo "user not foound";
+
+      echo "username or password is incorrect";
     }
   }
 }
