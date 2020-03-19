@@ -34,7 +34,6 @@ if(isset($_POST['username'], $_POST['password'])){  // check if username and pas
 
         foreach ($stmt->fetchAll() as $value) {
 
-          print_r($value);
           if(password_verify($password, $value['password'])){
 
             echo 'wellcome user';
