@@ -3,7 +3,10 @@
 session_start();
 require_once '../inc/connection.php';
 
-if(isset($_SESSION(['loggedin']) && $_SESSION['loggedin'] === true )){
+// if(isset($_SESSION(['loggedin']) && $_SESSION['loggedin'] === true ))
+if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true )
+
+{
 
   if(isset($_POST['email'], $_POST['password']) && !empty($_POST['password']) && !empty($_POST['email'])){
 
