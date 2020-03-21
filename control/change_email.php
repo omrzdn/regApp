@@ -3,13 +3,13 @@
 session_start();
 require_once '../inc/connection.php';
 
-if(isset($_SESSION(['loggedin']) && $_SESSION['loggedin'] === true )){
+if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true ){
 
   if(isset($_POST['email'], $_POST['password']) && !empty($_POST['password']) && !empty($_POST['email'])){
 
     if(strlen($_POST['password']) >= 8 && !strlen($_POST['password']) <= 32){
 
-      if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 
         $stmt = $pdo->prepare('SELECT * FROM users WHERE username = :username');
         $stmt->execute([
